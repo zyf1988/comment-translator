@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="CommentTranslator.2a67f6c0-6b7e-484f-9b6c-5f4e8ed22c69" Version="1.0.8" Language="zh-CN" Publisher="Hikari" />
+        <Identity Id="CommentTranslator.2a67f6c0-6b7e-484f-9b6c-5f4e8ed22c69" Version="1.0.9" Language="zh-CN" Publisher="Hikari" />
         <DisplayName>CommentTranslator64</DisplayName>
         <Description xml:space="preserve">Extension of visual studio that automatic translate comment in you open file.
 选择文本翻译，打开文件自动翻译注释。
@@ -11,9 +11,6 @@
         <Tags>translate;comment;翻译;翻译插件</Tags>
     </Metadata>
     <Installation>
-        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Community" />
-        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Pro" />
-        <InstallationTarget Version="[16.0,17.0)" Id="Microsoft.VisualStudio.Enterprise" />
         <InstallationTarget Version="[17.0,18.0)" Id="Microsoft.VisualStudio.Community">
             <ProductArchitecture>amd64</ProductArchitecture>
         </InstallationTarget>
