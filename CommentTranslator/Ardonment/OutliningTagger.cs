@@ -8,20 +8,20 @@ namespace CommentTranslator.Ardonment
 {
     internal sealed class OutliningTagger : ITagger<IOutliningRegionTag>
     {
-        string startHide = "[";     //the characters that start the outlining region
-        string endHide = "]";       //the characters that end the outlining region
-        string ellipsis = "...";    //the characters that are displayed when the region is collapsed
-        string hoverText = "hover text"; //the contents of the tooltip for the collapsed span
-        ITextBuffer buffer;
+        readonly string startHide = "[";     //the characters that start the outlining region
+        readonly string endHide = "]";       //the characters that end the outlining region
+        readonly string ellipsis = "...";    //the characters that are displayed when the region is collapsed
+        readonly string hoverText = "hover text"; //the contents of the tooltip for the collapsed span
+        readonly ITextBuffer buffer;
         ITextSnapshot snapshot;
         List<Region> regions;
 
         public OutliningTagger(ITextBuffer buffer)
         {
             this.buffer = buffer;
-            this.snapshot = buffer.CurrentSnapshot;
-            this.regions = new List<Region>();
-            this.ReParse();
+            snapshot = buffer.CurrentSnapshot;
+            regions = new List<Region>();
+            ReParse();
             this.buffer.Changed += BufferChanged;
         }
 
@@ -29,8 +29,8 @@ namespace CommentTranslator.Ardonment
         {
             if (spans.Count == 0)
                 yield break;
-            List<Region> currentRegions = this.regions;
-            ITextSnapshot currentSnapshot = this.snapshot;
+            List<Region> currentRegions = regions;
+            ITextSnapshot currentSnapshot = snapshot;
             SnapshotSpan entire = new SnapshotSpan(spans[0].Start, spans[spans.Count - 1].End).TranslateTo(currentSnapshot, SpanTrackingMode.EdgeExclusive);
             int startLineNumber = entire.Start.GetContainingLine().LineNumber;
             int endLineNumber = entire.End.GetContainingLine().LineNumber;
@@ -58,7 +58,7 @@ namespace CommentTranslator.Ardonment
             // If this isn't the most up-to-date version of the buffer, then ignore it for now (we'll eventually get another change event).
             if (e.After != buffer.CurrentSnapshot)
                 return;
-            this.ReParse();
+            ReParse();
         }
 
         void ReParse()
@@ -142,7 +142,7 @@ namespace CommentTranslator.Ardonment
 
             //determine the changed span, and send a changed event with the new spans
             List<Span> oldSpans =
-                new List<Span>(this.regions.Select(r => AsSnapshotSpan(r, this.snapshot)
+                new List<Span>(regions.Select(r => AsSnapshotSpan(r, snapshot)
                     .TranslateTo(newSnapshot, SpanTrackingMode.EdgeExclusive)
                     .Span));
             List<Span> newSpans =
@@ -170,15 +170,15 @@ namespace CommentTranslator.Ardonment
                 changeEnd = Math.Max(changeEnd, newSpans[newSpans.Count - 1].End);
             }
 
-            this.snapshot = newSnapshot;
-            this.regions = newRegions;
+            snapshot = newSnapshot;
+            regions = newRegions;
 
             if (changeStart <= changeEnd)
             {
-                ITextSnapshot snap = this.snapshot;
-                if (this.TagsChanged != null)
-                    this.TagsChanged(this, new SnapshotSpanEventArgs(
-                        new SnapshotSpan(this.snapshot, Span.FromBounds(changeStart, changeEnd))));
+                ITextSnapshot snap = snapshot;
+                if (TagsChanged != null)
+                    TagsChanged(this, new SnapshotSpanEventArgs(
+                        new SnapshotSpan(snapshot, Span.FromBounds(changeStart, changeEnd))));
             }
         }
 

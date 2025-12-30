@@ -42,7 +42,7 @@ namespace Framework
             if (response.IsSuccessStatusCode)
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
-                html = System.Text.Encoding.UTF8.GetString(bytes);
+                html = Encoding.UTF8.GetString(bytes);
                 var doc = Newtonsoft.Json.Linq.JArray.Parse(html);
 
                 r = doc[0]["translations"][0]["text"].ToString();

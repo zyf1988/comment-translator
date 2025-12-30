@@ -40,11 +40,11 @@ namespace CommentTranslator.Support
 
         protected IntraTextAdornmentTagger(IWpfTextView view)
         {
-            this._view = view;
+            _view = view;
             _snapshot = view.TextBuffer.CurrentSnapshot;
 
-            this._view.LayoutChanged += HandleLayoutChanged;
-            this._view.TextBuffer.Changed += HandleBufferChanged;
+            _view.LayoutChanged += HandleLayoutChanged;
+            _view.TextBuffer.Changed += HandleBufferChanged;
         }
 
         /// <param name="span">这个装饰将会消失的文本范围.</param>
@@ -83,7 +83,7 @@ namespace CommentTranslator.Support
                 bool wasEmpty = _invalidatedSpans.Count == 0;
                 _invalidatedSpans.AddRange(spans);
 
-                if (wasEmpty && this._invalidatedSpans.Count > 0)
+                if (wasEmpty && _invalidatedSpans.Count > 0)
                     _view.VisualElement.Dispatcher.BeginInvoke(new Action(AsyncUpdate));
             }
         }
@@ -181,7 +181,7 @@ namespace CommentTranslator.Support
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
-            if (snapshot != this._snapshot)
+            if (snapshot != _snapshot)
                 yield break;
 
             // Since WPF UI objects have state (like mouse hover or animation) and are relatively expensive to create and lay out,

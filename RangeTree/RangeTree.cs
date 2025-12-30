@@ -17,7 +17,7 @@
         private List<T> items;
         private bool isInSync;
         private bool autoRebuild;
-        private IComparer<T> rangeComparer;
+        private readonly IComparer<T> rangeComparer;
 
         /// <summary>
         /// Gets a value indicating whether the tree is currently in sync or not. If it is "out of sync"  you can either rebuild it manually (call Rebuild) or let it rebuild automatically when you query it next.
@@ -27,7 +27,7 @@
         /// </value>
         public bool IsInSync
         {
-            get { return this.isInSync; }
+            get { return isInSync; }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@
         /// </value>
         public IEnumerable<T> Items
         {
-            get { return this.items; }
+            get { return items; }
         }
 
         /// <summary>
@@ -49,7 +49,7 @@
         /// </value>
         public int Count
         {
-            get { return this.items.Count; }
+            get { return items.Count; }
         }
 
         /// <summary>
@@ -60,8 +60,8 @@
         /// </value>
         public bool AutoRebuild
         {
-            get { return this.autoRebuild; }
-            set { this.autoRebuild = value; }
+            get { return autoRebuild; }
+            set { autoRebuild = value; }
         }
 
         /// <summary>
@@ -71,10 +71,10 @@
         public RangeTree(IComparer<T> rangeComparer)
         {
             this.rangeComparer = rangeComparer;
-            this.root = new RangeTreeNode<TKey, T>(rangeComparer);            
-            this.items = new List<T>();
-            this.isInSync = true;
-            this.autoRebuild = true;    
+            root = new RangeTreeNode<TKey, T>(rangeComparer);            
+            items = new List<T>();
+            isInSync = true;
+            autoRebuild = true;    
         }
 
         /// <summary>
@@ -85,10 +85,10 @@
         public RangeTree(IEnumerable<T> items, IComparer<T> rangeComparer)
         {
             this.rangeComparer = rangeComparer;
-            this.root = new RangeTreeNode<TKey, T>(items, rangeComparer);
+            root = new RangeTreeNode<TKey, T>(items, rangeComparer);
             this.items = items.ToList();
-            this.isInSync = true;
-            this.autoRebuild = true;
+            isInSync = true;
+            autoRebuild = true;
         }
 
         /// <summary>
@@ -98,12 +98,12 @@
         /// <returns>The resulting <see cref="List{T}"/></returns>
         public List<T> Query(TKey value)
         {
-            if (!this.isInSync && this.autoRebuild)
+            if (!isInSync && autoRebuild)
             {
-                this.Rebuild();
+                Rebuild();
             }
 
-            return this.root.Query(value);
+            return root.Query(value);
         }
 
         /// <summary>
@@ -113,12 +113,12 @@
         /// <returns>The resulting <see cref="List{T}"/></returns>
         public List<T> Query(Range<TKey> range)
         {
-            if (!this.isInSync && this.autoRebuild)
+            if (!isInSync && autoRebuild)
             {
-                this.Rebuild();
+                Rebuild();
             }
 
-            return this.root.Query(range);
+            return root.Query(range);
         }
 
         /// <summary>
@@ -126,13 +126,13 @@
         /// </summary>
         public void Rebuild()
         {
-            if (this.isInSync)
+            if (isInSync)
             {
                 return;
             }
 
-            this.root = new RangeTreeNode<TKey, T>(this.items, this.rangeComparer);
-            this.isInSync = true;
+            root = new RangeTreeNode<TKey, T>(items, rangeComparer);
+            isInSync = true;
         }
 
         /// <summary>
@@ -141,8 +141,8 @@
         /// <param name="item">The item.</param>
         public void Add(T item)
         {
-            this.isInSync = false;
-            this.items.Add(item);
+            isInSync = false;
+            items.Add(item);
         }
 
         /// <summary>
@@ -151,7 +151,7 @@
         /// <param name="items">The items.</param>
         public void Add(IEnumerable<T> items)
         {
-            this.isInSync = false;
+            isInSync = false;
             this.items.AddRange(items);
         }
 
@@ -161,8 +161,8 @@
         /// <param name="item">The item.</param>
         public void Remove(T item)
         {
-            this.isInSync = false;
-            this.items.Remove(item);
+            isInSync = false;
+            items.Remove(item);
         }
 
         /// <summary>
@@ -171,7 +171,7 @@
         /// <param name="items">The items.</param>
         public void Remove(IEnumerable<T> items)
         {
-            this.isInSync = false;
+            isInSync = false;
 
             foreach (var item in items)
             {
@@ -184,9 +184,9 @@
         /// </summary>
         public void Clear()
         {
-            this.root = new RangeTreeNode<TKey, T>(this.rangeComparer);            
-            this.items = new List<T>();
-            this.isInSync = true;
+            root = new RangeTreeNode<TKey, T>(rangeComparer);            
+            items = new List<T>();
+            isInSync = true;
         }
     }
 }

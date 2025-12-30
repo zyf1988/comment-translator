@@ -6,7 +6,7 @@ namespace CommentTranslator.Client
 {
     public class TranslateClient
     {
-        private Settings _settings;
+        private readonly Settings _settings;
 
         public TranslateClient(Settings settings)
         {

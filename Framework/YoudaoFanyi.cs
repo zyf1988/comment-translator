@@ -30,7 +30,7 @@ namespace Framework
         {
             var localtime = GetTimeStamp();
             var signData = $"client=fanyideskweb&mysticTime={localtime}&product=webfanyi&key=fsdsogkndfokasodnaso";
-            var sign = System.BitConverter.ToString(MD5.Create().ComputeHash(System.Text.Encoding.GetEncoding("utf-8").GetBytes(signData))).Replace("-", "").ToLower();
+            var sign = BitConverter.ToString(MD5.Create().ComputeHash(Encoding.GetEncoding("utf-8").GetBytes(signData))).Replace("-", "").ToLower();
             IDictionary<string, string> dic = new Dictionary<string, string>();
             dic.Add("i", body);
             dic.Add("from", from);
@@ -60,10 +60,10 @@ namespace Framework
             if (response.IsSuccessStatusCode)
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
-                string html = System.Text.Encoding.UTF8.GetString(bytes);
+                string html = Encoding.UTF8.GetString(bytes);
                 html = DecryptedText(html);
-                var jo = Newtonsoft.Json.Linq.JObject.Parse(html);
-                var jr = Newtonsoft.Json.Linq.JArray.Parse(jo["translateResult"].ToString());
+                var jo = JObject.Parse(html);
+                var jr = JArray.Parse(jo["translateResult"].ToString());
                 r = JObject.Parse(jr[0][0].ToString())["tgt"].ToString();
             }
 
@@ -84,8 +84,8 @@ namespace Framework
         {
             string o = "ydsecret://query/key/B*RGygVywfNBwpmBaZg*WT7SIOUP2T0C9WHMZN39j^DAdaZhAnxvGcCY6VYFwnHl";
             string n = "ydsecret://query/iv/C@lZe2YzHtZ2CYgaXKSVfsb7Y4QWHjITPPZ0nQp87fBeJ!Iv6v^6fvi2WN@bYpJ4";
-            var a = MD5.Create().ComputeHash(System.Text.Encoding.GetEncoding("utf-8").GetBytes(o));
-            var r = MD5.Create().ComputeHash(System.Text.Encoding.GetEncoding("utf-8").GetBytes(n));
+            var a = MD5.Create().ComputeHash(Encoding.GetEncoding("utf-8").GetBytes(o));
+            var r = MD5.Create().ComputeHash(Encoding.GetEncoding("utf-8").GetBytes(n));
 
             text = text.Replace("-", "+").Replace("_", "/");
 

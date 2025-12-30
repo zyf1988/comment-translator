@@ -5,7 +5,7 @@ namespace CommentTranslator.Util
 {
     public class CommentParserHelper
     {
-        private static Dictionary<string, ICommentParser> _dictionary = new Dictionary<string, ICommentParser>();
+        private static readonly Dictionary<string, ICommentParser> _dictionary = new Dictionary<string, ICommentParser>();
 
         public static ICommentParser GetCommentParser(string lang)
         {

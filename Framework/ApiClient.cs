@@ -18,8 +18,10 @@ namespace Framework
             body = HumpUnfold(body);
             string fromLanguage = LanguageTransform(apiRequest.TranslateServer, apiRequest.FromLanguage);
             string toLanguage = LanguageTransform(apiRequest.TranslateServer, apiRequest.ToLanguage);
-            ApiResponse res = new ApiResponse();
-            res.SourceText = apiRequest.Body;
+            ApiResponse res = new ApiResponse
+            {
+                SourceText = apiRequest.Body
+            };
             switch (apiRequest.TranslateServer)
             {
                 case TranslateServerEnum.Google:

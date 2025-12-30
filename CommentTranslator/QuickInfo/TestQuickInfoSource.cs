@@ -16,8 +16,8 @@ namespace CommentTranslator.QuickInfo
     internal class TestQuickInfoSource : IAsyncQuickInfoSource
     {
         private TestQuickInfoSourceProvider m_provider;
-        private ITextBuffer m_subjectBuffer;
-        private Dictionary<string, string> m_dictionary;
+        private readonly ITextBuffer m_subjectBuffer;
+        private readonly Dictionary<string, string> m_dictionary;
         private bool m_isDisposed;
 
         internal TestQuickInfoSource(TestQuickInfoSourceProvider provider, ITextBuffer subjectBuffer)

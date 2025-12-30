@@ -64,7 +64,7 @@ namespace CommentTranslator.Presentation
 
             if (e.ApplyBehavior == ApplyKind.Apply)
             {
-                this.SaveToSetting();
+                SaveToSetting();
             }
         }
 

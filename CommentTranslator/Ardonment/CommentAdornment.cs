@@ -28,8 +28,8 @@ namespace CommentTranslator.Ardonment
         private CommentTag _tag;
         private SnapshotSpan _span;
         private SnapshotSpan _containSpan;
-        private IWpfTextView _view;
-        private IEditorFormatMap _format;
+        private readonly IWpfTextView _view;
+        private readonly IEditorFormatMap _format;
 
         private bool _isTranslating;
         private CommentTag _currentTag;
@@ -91,10 +91,7 @@ namespace CommentTranslator.Ardonment
             };
 
             //Draw Line
-            _line = new Line();
-            _line.Stroke = Brushes.LightGray;
-            _line.StrokeThickness = 6;
-            _line.SnapsToDevicePixels = true;
+            _line = new Line { Stroke = Brushes.LightGray, StrokeThickness = 6, SnapsToDevicePixels = true };
             _line.SetValue(RenderOptions.EdgeModeProperty, EdgeMode.Aliased);
 
             //Get format
@@ -114,8 +111,8 @@ namespace CommentTranslator.Ardonment
             RefreshLayout(tag.Comment);
 
             //Add to parent
-            this.Children.Add(_line);
-            this.Children.Add(_textBlock);
+            Children.Add(_line);
+            Children.Add(_textBlock);
         }
 
         private void RefreshLayout(Comment comment, bool hideOnEmpty = true)
@@ -123,11 +120,11 @@ namespace CommentTranslator.Ardonment
             //Hide on empty
             if (hideOnEmpty && string.IsNullOrEmpty(comment.Content))
             {
-                this.Visibility = Visibility.Collapsed;
+                Visibility = Visibility.Collapsed;
             }
             else
             {
-                this.Visibility = Visibility.Visible;
+                Visibility = Visibility.Visible;
             }
 
             //Measure size
@@ -153,12 +150,12 @@ namespace CommentTranslator.Ardonment
             _line.Y2 = format.Height + _line.Y1 + 1;
 
             //Set text box position
-            Canvas.SetTop(_textBlock, 4);
-            Canvas.SetLeft(_textBlock, 10);
+            SetTop(_textBlock, 4);
+            SetLeft(_textBlock, 10);
 
             //Set size of canvas
-            this.Height = GetLineHeight(_view);
-            this.Width = 0;
+            Height = GetLineHeight(_view);
+            Width = 0;
         }
 
         private void RefreshLayoutRight(Comment comment, FormattedText format)
@@ -168,8 +165,8 @@ namespace CommentTranslator.Ardonment
             var left = format.Width + 20;
 
             //Set position of text box
-            Canvas.SetTop(_textBlock, top);
-            Canvas.SetLeft(_textBlock, left);
+            SetTop(_textBlock, top);
+            SetLeft(_textBlock, left);
 
             //Set position of line
             _line.X1 = _line.X2 = left - 5;
@@ -177,8 +174,8 @@ namespace CommentTranslator.Ardonment
             _line.Y2 = format.Height + _line.Y1 + 1;
 
             //Set size of canvas
-            this.Height = 0;
-            this.Width = 0;
+            Height = 0;
+            Width = 0;
         }
 
         private FormattedText MeasureFormat(string candidate)
@@ -327,18 +324,18 @@ namespace CommentTranslator.Ardonment
         {
             public TranslatedComment(string origin, TextPositions position)
             {
-                this.Origin = origin;
-                this.Position = position;
+                Origin = origin;
+                Position = position;
             }
 
             public TranslatedComment(Comment comment, string translated)
             {
-                this.Line = comment.Line;
-                this.Origin = comment.Origin;
-                this.Position = comment.Position;
-                this.Content = comment.Content;
-                this.MarginTop = comment.MarginTop;
-                this.Translated = translated;
+                Line = comment.Line;
+                Origin = comment.Origin;
+                Position = comment.Position;
+                Content = comment.Content;
+                MarginTop = comment.MarginTop;
+                Translated = translated;
             }
 
             public string Translated { get; set; }

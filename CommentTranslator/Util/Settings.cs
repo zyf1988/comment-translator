@@ -10,12 +10,12 @@ namespace CommentTranslator.Util
     {
         public Settings()
         {
-            this.TranslateServer = TranslateServerEnum.Bing;
-            this.TranslateFrom = LanguageEnum.Auto;
-            this.TranslatetTo = GetCurrentCulture();
-            this.AutoTranslateComment = false;
-            this.AutoTextCopy = false;
-            this.AutoTranslateQuickInfo = true;
+            TranslateServer = TranslateServerEnum.Bing;
+            TranslateFrom = LanguageEnum.Auto;
+            TranslatetTo = GetCurrentCulture();
+            AutoTranslateComment = false;
+            AutoTextCopy = false;
+            AutoTranslateQuickInfo = true;
         }
         /// <summary>
         /// 翻译服务器
@@ -48,12 +48,12 @@ namespace CommentTranslator.Util
         /// <param name="page"></param>
         public void ReloadSetting(OptionPageGrid page)
         {
-            this.TranslateServer = page.TranslateServer;
-            this.TranslateFrom = page.TranslateFrom;
-            this.TranslatetTo = page.TranslatetTo;
-            this.AutoTranslateComment = page.AutoTranslateComment;
-            this.AutoTextCopy = page.AutoTextCopy;
-            this.AutoTranslateQuickInfo = page.AutoTranslateQuickInfo;
+            TranslateServer = page.TranslateServer;
+            TranslateFrom = page.TranslateFrom;
+            TranslatetTo = page.TranslatetTo;
+            AutoTranslateComment = page.AutoTranslateComment;
+            AutoTextCopy = page.AutoTextCopy;
+            AutoTranslateQuickInfo = page.AutoTranslateQuickInfo;
         }
         /// <summary>
         /// 获得当前语言

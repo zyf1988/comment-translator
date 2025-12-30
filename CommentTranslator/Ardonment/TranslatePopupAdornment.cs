@@ -26,12 +26,12 @@ namespace CommentTranslator.Ardonment
         /// <param name="view">The <see cref="IWpfTextView"/> upon which the adornment will be drawn</param>
         public TranslatePopupAdornment(IWpfTextView view)
         {
-            this._view = view ?? throw new ArgumentNullException("view");
-            this._layer = view.GetAdornmentLayer("TransplatePopupAdornment");
+            _view = view ?? throw new ArgumentNullException("view");
+            _layer = view.GetAdornmentLayer("TransplatePopupAdornment");
 
-            this._view.Selection.SelectionChanged += this.OnSelectionChanged;
-            this._view.LayoutChanged += this.OnLayoutChanged;
-            this._view.Closed += OnClosed;
+            _view.Selection.SelectionChanged += OnSelectionChanged;
+            _view.LayoutChanged += OnLayoutChanged;
+            _view.Closed += OnClosed;
         }
 
         /// <summary>

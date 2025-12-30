@@ -38,7 +38,7 @@ namespace CommentTranslator.Command
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(this.Execute, menuCommandID);
+            var menuItem = new MenuCommand(Execute, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 
@@ -54,11 +54,11 @@ namespace CommentTranslator.Command
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
+        private IAsyncServiceProvider ServiceProvider
         {
             get
             {
-                return this.package;
+                return package;
             }
         }
 
@@ -97,7 +97,7 @@ namespace CommentTranslator.Command
             //    OLEMSGICON.OLEMSGICON_INFO,
             //    OLEMSGBUTTON.OLEMSGBUTTON_OK,
             //    OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST);
-            OptionPageGrid page = (OptionPageGrid)this.package.GetDialogPage(typeof(OptionPageGrid));
+            OptionPageGrid page = (OptionPageGrid)package.GetDialogPage(typeof(OptionPageGrid));
 
             page.AutoTranslateComment = !page.AutoTranslateComment;
             page.SaveSettingsToStorage();

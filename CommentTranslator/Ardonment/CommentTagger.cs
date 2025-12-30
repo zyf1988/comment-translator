@@ -13,11 +13,11 @@ namespace CommentTranslator.Ardonment
     {
         #region Fields
 
-        private ITextBuffer _buffer;
+        private readonly ITextBuffer _buffer;
         private ITextSnapshot _snapshot;
         private IEnumerable<CommentRegion> _regions;
-        private ICommentParser _parser;
-        private ITagAggregator<IClassificationTag> _classificationTag;
+        private readonly ICommentParser _parser;
+        private readonly ITagAggregator<IClassificationTag> _classificationTag;
 
         #endregion
 
@@ -25,16 +25,16 @@ namespace CommentTranslator.Ardonment
 
         public CommentTagger(ITextBuffer buffer, ITagAggregator<IClassificationTag> classificationTag)
         {
-            this._buffer = buffer;
-            this._snapshot = buffer.CurrentSnapshot;
-            this._regions = new List<CommentRegion>();
-            this._parser = CommentParserHelper.GetCommentParser(buffer.ContentType.TypeName);
-            this._classificationTag = classificationTag;
+            _buffer = buffer;
+            _snapshot = buffer.CurrentSnapshot;
+            _regions = new List<CommentRegion>();
+            _parser = CommentParserHelper.GetCommentParser(buffer.ContentType.TypeName);
+            _classificationTag = classificationTag;
 
             if (_parser != null)
             {
-                this.ReParse(null);
-                this._buffer.Changed += BufferChanged;
+                ReParse(null);
+                _buffer.Changed += BufferChanged;
             }
         }
 
@@ -51,8 +51,8 @@ namespace CommentTranslator.Ardonment
             if (!CommentTranslatorPackage.Settings.AutoTranslateComment || spans.Count == 0 || _parser == null)
                 yield break;
 
-            var currentRegions = this._regions;
-            var currentSnapshot = this._snapshot;
+            var currentRegions = _regions;
+            var currentSnapshot = _snapshot;
             var entire = new SnapshotSpan(spans[0].Start, spans[spans.Count - 1].End).TranslateTo(currentSnapshot, SpanTrackingMode.EdgeExclusive);
 
             var commentTagSpans = _classificationTag.GetTagSpan(spans, "comment");
@@ -101,7 +101,7 @@ namespace CommentTranslator.Ardonment
                 if (changes.Count == 0) return;
 
                 //Find start of change line
-                foreach (var region in this._regions)
+                foreach (var region in _regions)
                 {
                     if (region.Start + region.Length >= changes[0].OldPosition)
                     {
@@ -120,7 +120,7 @@ namespace CommentTranslator.Ardonment
             if (regions.Count() > 0) newRegions.AddRange(regions);
 
             //determine the changed span, and send a changed event with the new spans
-            List<Span> oldSpans = new List<Span>(this._regions.Select(r => AsSnapshotSpan(r, this._snapshot)
+            List<Span> oldSpans = new List<Span>(_regions.Select(r => AsSnapshotSpan(r, _snapshot)
                                                                             .TranslateTo(newSnapshot, SpanTrackingMode.EdgeExclusive)
                                                                             .Span));
             List<Span> newSpans = new List<Span>(newRegions.Select(r => AsSnapshotSpan(r, newSnapshot).Span));
@@ -146,15 +146,15 @@ namespace CommentTranslator.Ardonment
                 changeEnd = Math.Max(changeEnd, newSpans[newSpans.Count - 1].End);
             }
 
-            this._snapshot = newSnapshot;
-            this._regions = newRegions;
+            _snapshot = newSnapshot;
+            _regions = newRegions;
 
             if (changeStart <= changeEnd)
             {
                 //Debug.WriteLine("ReParse: ({0}, {1})", changeStart, changeEnd);
 
-                ITextSnapshot snap = this._snapshot;
-                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(this._snapshot, Span.FromBounds(changeStart, changeEnd))));
+                ITextSnapshot snap = _snapshot;
+                TagsChanged?.Invoke(this, new SnapshotSpanEventArgs(new SnapshotSpan(_snapshot, Span.FromBounds(changeStart, changeEnd))));
             }
         }
 
@@ -178,7 +178,7 @@ namespace CommentTranslator.Ardonment
             // If this isn't the most up-to-date version of the buffer, then ignore it for now (we'll eventually get another change event).
             if (e.After != _buffer.CurrentSnapshot)
                 return;
-            this.ReParse(e.Changes);
+            ReParse(e.Changes);
         }
 
         #endregion

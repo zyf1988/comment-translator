@@ -8,8 +8,8 @@ namespace CommentTranslator.QuickInfo
     public class TestQuickInfoController: IIntellisenseController
     {
         private ITextView m_textView;
-        private IList<ITextBuffer> m_subjectBuffers;
-        private TestQuickInfoControllerProvider m_provider;
+        private readonly IList<ITextBuffer> m_subjectBuffers;
+        private readonly TestQuickInfoControllerProvider m_provider;
         private IAsyncQuickInfoSession m_session;
         internal TestQuickInfoController(ITextView textView, IList<ITextBuffer> subjectBuffers, TestQuickInfoControllerProvider provider)
         {
@@ -17,13 +17,13 @@ namespace CommentTranslator.QuickInfo
             m_subjectBuffers = subjectBuffers;
             m_provider = provider;
 
-            m_textView.MouseHover += this.OnTextViewMouseHover;
+            m_textView.MouseHover += OnTextViewMouseHover;
         }
         public void Detach(ITextView textView)
         {
             if (m_textView == textView)
             {
-                m_textView.MouseHover -= this.OnTextViewMouseHover;
+                m_textView.MouseHover -= OnTextViewMouseHover;
                 m_textView = null;
             }
         }

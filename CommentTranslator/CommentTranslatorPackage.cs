@@ -33,7 +33,7 @@ namespace CommentTranslator
     /// </remarks>
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [InstalledProductRegistration("#110", "#112", "1.0.2", IconResourceID = 400)] // Info on this package for Help/About
-    [Guid(CommentTranslatorPackage.PackageGuidString)]
+    [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(OptionPageGrid), "CommentTranslator64", "General", 0, 0, true)]
     //[SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
@@ -67,7 +67,7 @@ namespace CommentTranslator
         {
             // When initialized asynchronously, the current thread may be a background thread at this point.
             // Do any initialization that requires the UI thread after switching to the UI thread.
-            await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             // await GetTKKCommand.InitializeAsync(this);
             await ToggleAutoTranslateCommand.InitializeAsync(this);
             await TranslateCommand.InitializeAsync(this);

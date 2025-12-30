@@ -18,8 +18,8 @@ namespace CommentTranslator.Ardonment
             return view.Properties.GetOrCreateSingletonProperty(() => new CommentAdornmentTagger(view, format, commentTagger.Value));
         }
 
-        private ITagAggregator<CommentTag> _commentTagger;
-        private IEditorFormatMap _format;
+        private readonly ITagAggregator<CommentTag> _commentTagger;
+        private readonly IEditorFormatMap _format;
 
         #endregion
 

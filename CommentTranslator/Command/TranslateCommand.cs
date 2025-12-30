@@ -50,7 +50,7 @@ namespace CommentTranslator.Command
             commandService = commandService ?? throw new ArgumentNullException(nameof(commandService));
 
             var menuCommandID = new CommandID(CommandSet, CommandId);
-            var menuItem = new MenuCommand(this.Execute, menuCommandID);
+            var menuItem = new MenuCommand(Execute, menuCommandID);
             commandService.AddCommand(menuItem);
         }
 
@@ -66,11 +66,11 @@ namespace CommentTranslator.Command
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private Microsoft.VisualStudio.Shell.IAsyncServiceProvider ServiceProvider
+        private IAsyncServiceProvider ServiceProvider
         {
             get
             {
-                return this.package;
+                return package;
             }
         }
 
@@ -144,7 +144,7 @@ namespace CommentTranslator.Command
         private IWpfTextView GetWpfView()
         {
             var textManager =  (IVsTextManager)ServiceProvider.GetServiceAsync(typeof(SVsTextManager)).GetAwaiter().GetResult();
-            var componentModel = (IComponentModel)this.ServiceProvider.GetServiceAsync(typeof(SComponentModel)).Result;
+            var componentModel = (IComponentModel)ServiceProvider.GetServiceAsync(typeof(SComponentModel)).Result;
             var editor = componentModel.GetService<IVsEditorAdaptersFactoryService>();
 
             textManager.GetActiveView(1, null, out IVsTextView textViewCurrent);

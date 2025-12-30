@@ -20,12 +20,12 @@
         private List<T> removedItems = new List<T>();
         private List<T> addedItemsRebuilding = new List<T>();
         private List<T> removedItemsRebuilding = new List<T>();
-        private IComparer<T> rangeComparer;
+        private readonly IComparer<T> rangeComparer;
         private Task rebuildTask;
         private CancellationTokenSource rebuildTaskCancelSource;
         private bool isRebuilding;
 
-        private object locker = new object();
+        private readonly object locker = new object();
 
         /// <summary>
         /// Gets the items in the tree.
@@ -35,7 +35,7 @@
         /// </value>
         public IEnumerable<T> Items
         {
-            get { return this.rangeTree.Items.Concat(this.addedItemsRebuilding).Concat(this.addedItems); }
+            get { return rangeTree.Items.Concat(addedItemsRebuilding).Concat(addedItems); }
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// </value>
         public int Count
         {
-            get { return this.rangeTree.Count + this.addedItemsRebuilding.Count + this.addedItems.Count; }
+            get { return rangeTree.Count + addedItemsRebuilding.Count + addedItems.Count; }
         }
 
         /// <summary>
@@ -55,7 +55,7 @@
         /// <param name="rangeComparer">The range comparer.</param>
         public RangeTreeAsync(IComparer<T> rangeComparer)
         {
-            this.rangeTree = new RangeTree<TKey, T>(rangeComparer) { AutoRebuild = false };
+            rangeTree = new RangeTree<TKey, T>(rangeComparer) { AutoRebuild = false };
             this.rangeComparer = rangeComparer;
         }
 
@@ -66,7 +66,7 @@
         /// <param name="rangeComparer">The range comparer.</param>
         public RangeTreeAsync(IEnumerable<T> items, IComparer<T> rangeComparer)
         {
-            this.rangeTree = new RangeTree<TKey, T>(items, rangeComparer) { AutoRebuild = false };
+            rangeTree = new RangeTree<TKey, T>(items, rangeComparer) { AutoRebuild = false };
             this.rangeComparer = rangeComparer;
         }
 
@@ -78,21 +78,21 @@
         public List<T> Query(TKey value)
         {
             // check if we need to start a rebuild task
-            if (this.NeedsRebuild())
+            if (NeedsRebuild())
             {
-                this.RebuildTree();
+                RebuildTree();
             }
 
-            lock (this.locker)
+            lock (locker)
             {
                 // query the tree (may be out of date)
-                var results = this.rangeTree.Query(value);
+                var results = rangeTree.Query(value);
 
                 // add additional results
-                results.AddRange(this.addedItemsRebuilding.Where(item => item.Range.Contains(value)));
-                results.AddRange(this.addedItems.Where(item => item.Range.Contains(value)));
+                results.AddRange(addedItemsRebuilding.Where(item => item.Range.Contains(value)));
+                results.AddRange(addedItems.Where(item => item.Range.Contains(value)));
 
-                return this.FilterResults(results);
+                return FilterResults(results);
             }
         }
 
@@ -104,21 +104,21 @@
         public List<T> Query(Range<TKey> range)
         {
             // check if we need to start a rebuild task
-            if (this.NeedsRebuild())
+            if (NeedsRebuild())
             {
-                this.RebuildTree();
+                RebuildTree();
             }
 
-            lock (this.locker)
+            lock (locker)
             {
                 // query the tree (may be out of date)
-                var results = this.rangeTree.Query(range);
+                var results = rangeTree.Query(range);
 
                  // add additional results
-                results.AddRange(this.addedItemsRebuilding.Where(item => item.Range.Intersects(range)));
-                results.AddRange(this.addedItems.Where(item => item.Range.Intersects(range)));
+                results.AddRange(addedItemsRebuilding.Where(item => item.Range.Intersects(range)));
+                results.AddRange(addedItems.Where(item => item.Range.Intersects(range)));
 
-                return this.FilterResults(results);
+                return FilterResults(results);
             }
         }
 
@@ -129,15 +129,15 @@
         /// <returns>The resulting <see cref="List{T}"/></returns>
         private List<T> FilterResults(List<T> results)
         {
-            if (this.removedItemsRebuilding.Count > 0 || this.removedItems.Count > 0)
+            if (removedItemsRebuilding.Count > 0 || removedItems.Count > 0)
             {
                 var hs = new HashSet<T>(results);
-                foreach (var item in this.removedItemsRebuilding)
+                foreach (var item in removedItemsRebuilding)
                 {
                     hs.Remove(item);
                 }
 
-                foreach (var item in this.removedItems)
+                foreach (var item in removedItems)
                 {
                     hs.Remove(item);
                 }
@@ -154,9 +154,9 @@
         /// <param name="item">The item.</param>
         public void Add(T item)
         {
-            lock (this.locker)
+            lock (locker)
             {
-                this.addedItems.Add(item);
+                addedItems.Add(item);
             }
         }
 
@@ -166,9 +166,9 @@
         /// <param name="items">The items.</param>
         public void Add(IEnumerable<T> items)
         {
-            lock (this.locker)
+            lock (locker)
             {
-                this.addedItems.AddRange(items);
+                addedItems.AddRange(items);
             }
         }
 
@@ -178,9 +178,9 @@
         /// <param name="item">The item.</param>
         public void Remove(T item)
         {
-            lock (this.locker)
+            lock (locker)
             {
-                this.removedItems.Add(item);
+                removedItems.Add(item);
             }
         }
 
@@ -190,9 +190,9 @@
         /// <param name="items">The items.</param>
         public void Remove(IEnumerable<T> items)
         {
-            lock (this.locker)
+            lock (locker)
             {
-                this.removedItems.AddRange(items);
+                removedItems.AddRange(items);
             }
         }
 
@@ -201,17 +201,17 @@
         /// </summary>
         public void Clear()
         {
-            lock (this.locker)
+            lock (locker)
             {
-                this.rangeTree.Clear();
-                this.addedItems = new List<T>();
-                this.removedItems = new List<T>();
-                this.addedItemsRebuilding = new List<T>();
-                this.removedItemsRebuilding = new List<T>();
+                rangeTree.Clear();
+                addedItems = new List<T>();
+                removedItems = new List<T>();
+                addedItemsRebuilding = new List<T>();
+                removedItemsRebuilding = new List<T>();
 
-                if (this.rebuildTaskCancelSource != null)
+                if (rebuildTaskCancelSource != null)
                 {
-                    this.rebuildTaskCancelSource.Cancel();
+                    rebuildTaskCancelSource.Cancel();
                 }
             }
         }
@@ -221,9 +221,9 @@
         /// </summary>
         public void Rebuild()
         {
-            if (this.NeedsRebuild())
+            if (NeedsRebuild())
             {
-                this.RebuildTree();
+                RebuildTree();
             }
         }
 
@@ -232,70 +232,70 @@
         /// </summary>
         private void RebuildTree()
         {
-            lock (this.locker)
+            lock (locker)
             {
                 // if a rebuild is in progress return
-                if (this.isRebuilding || this.addedItems.Count == 0)
+                if (isRebuilding || addedItems.Count == 0)
                 {
                     return;
                 }
 
-                this.isRebuilding = true;
+                isRebuilding = true;
             }
 
-            this.rebuildTaskCancelSource = new CancellationTokenSource();
+            rebuildTaskCancelSource = new CancellationTokenSource();
 
-            this.rebuildTask = Task.Factory.StartNew(
+            rebuildTask = Task.Factory.StartNew(
                 () =>
                 {
-                    lock (this.locker)
+                    lock (locker)
                     {
                         // store the items to be added, we need this if a query takes places
                         // before we are finished rebuilding
-                        this.addedItemsRebuilding = this.addedItems.ToList();
-                        this.addedItems.Clear();
+                        addedItemsRebuilding = addedItems.ToList();
+                        addedItems.Clear();
 
                         // store the items to be removed ...
-                        this.removedItemsRebuilding = this.removedItemsRebuilding.ToList();
-                        this.removedItems.Clear();
+                        removedItemsRebuilding = removedItemsRebuilding.ToList();
+                        removedItems.Clear();
                     }
 
                     // all items of the tree
-                    var allItems = this.rangeTree.Items.ToList();
-                    allItems.AddRange(this.addedItemsRebuilding);
+                    var allItems = rangeTree.Items.ToList();
+                    allItems.AddRange(addedItemsRebuilding);
 
                     // we may have to remove some
-                    foreach (var item in this.removedItemsRebuilding)
+                    foreach (var item in removedItemsRebuilding)
                     {
                         allItems.Remove(item);
                     }
 
                     // build the new tree
-                    var newTree = new RangeTree<TKey, T>(allItems, this.rangeComparer) { AutoRebuild = false };
+                    var newTree = new RangeTree<TKey, T>(allItems, rangeComparer) { AutoRebuild = false };
 
                     // if task was not cancelled, set the new tree as the current one
-                    if (!this.rebuildTaskCancelSource.Token.IsCancellationRequested)
+                    if (!rebuildTaskCancelSource.Token.IsCancellationRequested)
                     {
-                        lock (this.locker)
+                        lock (locker)
                         {
-                            this.rangeTree = newTree;
-                            this.addedItemsRebuilding.Clear();
-                            this.removedItemsRebuilding.Clear();
+                            rangeTree = newTree;
+                            addedItemsRebuilding.Clear();
+                            removedItemsRebuilding.Clear();
                         }
                     }
                     else
                     {
                         // nop
                     }
-                }, this.rebuildTaskCancelSource.Token)
+                }, rebuildTaskCancelSource.Token)
             .ContinueWith(task =>
             {
                 // done with rebuilding, do we need to start again?
-                this.isRebuilding = false;
+                isRebuilding = false;
 
-                if (this.NeedsRebuild())
+                if (NeedsRebuild())
                 {
-                    this.RebuildTree();
+                    RebuildTree();
                 }
             });
         }
@@ -306,11 +306,11 @@
         /// <returns>[true] is needs rebuild, otherwise [false]</returns>
         private bool NeedsRebuild()
         {
-            lock (this.locker)
+            lock (locker)
             {
                 // only if count of added or removed items is > 100
                 // otherwise, the sequential query is ok
-                return this.addedItems.Count > 100 || this.removedItems.Count > 100;
+                return addedItems.Count > 100 || removedItems.Count > 100;
             }
         }
     }

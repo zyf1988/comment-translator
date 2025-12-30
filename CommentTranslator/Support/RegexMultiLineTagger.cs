@@ -12,7 +12,7 @@ namespace CommentTranslator.Support
     public abstract class RegexMultiLineTagger<T> : ITagger<T> where T : ITag
     {
         private IEnumerable<RegexInfo> _regexInfos;
-        private ITextBuffer _textBuffer;
+        private readonly ITextBuffer _textBuffer;
         private IEnumerable<Regex> _matchExpressions;
 
         public RegexMultiLineTagger(ITextBuffer buffer, IEnumerable<RegexInfo> regexInfos)

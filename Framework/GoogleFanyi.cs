@@ -23,7 +23,7 @@ namespace Framework
             if (response.IsSuccessStatusCode)
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
-                string html = System.Text.Encoding.UTF8.GetString(bytes);
+                string html = Encoding.UTF8.GetString(bytes);
                 html = html.Replace("\\n", "").Replace(")]}'", "");
                 var jo = Newtonsoft.Json.Linq.JArray.Parse(html);
                 jo = Newtonsoft.Json.Linq.JArray.Parse(jo[0][2].ToString());
