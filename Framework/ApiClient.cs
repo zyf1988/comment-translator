@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace Framework
 {
@@ -16,26 +11,26 @@ namespace Framework
         {
             var body = apiRequest.Body.Replace("\r\n", "\n");
             body = HumpUnfold(body);
-            string fromLanguage = LanguageTransform(apiRequest.TranslateServer, apiRequest.FromLanguage);
-            string toLanguage = LanguageTransform(apiRequest.TranslateServer, apiRequest.ToLanguage);
-            ApiResponse res = new ApiResponse
+            var fromLanguage = LanguageTransform(apiRequest.TranslateServer, apiRequest.FromLanguage);
+            var toLanguage = LanguageTransform(apiRequest.TranslateServer, apiRequest.ToLanguage);
+            var res = new ApiResponse
             {
                 SourceText = apiRequest.Body
             };
             switch (apiRequest.TranslateServer)
             {
                 case TranslateServerEnum.Google:
-                    GoogleFanyi googleFanyi = new GoogleFanyi();
+                    var googleFanyi = new GoogleFanyi();
                     res = await googleFanyi.Fanyi(body, fromLanguage, toLanguage, apiRequest.FromLanguage, apiRequest.ToLanguage);
                     break;
                 case TranslateServerEnum.Bing:
-                    BingFanyi bingFanyi = new BingFanyi();
+                    var bingFanyi = new BingFanyi();
                     res = await bingFanyi.Fanyi(body, fromLanguage, toLanguage, apiRequest.FromLanguage, apiRequest.ToLanguage);
                     break;
                 case TranslateServerEnum.百度:
                     break;
                 case TranslateServerEnum.有道:
-                    YoudaoFanyi youdaoFanyi = new YoudaoFanyi();
+                    var youdaoFanyi = new YoudaoFanyi();
                     res = await youdaoFanyi.Fanyi(body, fromLanguage, toLanguage, apiRequest.FromLanguage, apiRequest.ToLanguage);
                     break;
                 default:
@@ -50,20 +45,20 @@ namespace Framework
         /// </summary>
         /// <param name="humpString"></param>
         /// <returns></returns>
-        private String HumpUnfold(String humpString)
+        private static string HumpUnfold(string humpString)
         {
-            string[] ss = humpString.Split(' ');
-            string res = "";
+            var ss = humpString.Split(' ');
+            var res = "";
             foreach (var s in ss)
             {
-                Regex regex = new Regex("([A-Z]|^)[a-z]+");
+                var regex = new Regex("([A-Z]|^)[a-z]+");
                 var matcher = regex.Matches(s);
                 if (matcher.Count > 0)
                 {
-                    StringBuilder sb = new StringBuilder();
+                    var sb = new StringBuilder();
                     foreach (Match match in matcher)
                     {
-                        string g = match.Groups[0].Value;
+                        var g = match.Groups[0].Value;
                         sb.Append(g + " ");
                     }
 
@@ -79,9 +74,9 @@ namespace Framework
             return res;
         }
 
-        private string LanguageTransform(TranslateServerEnum translateServer, LanguageEnum language)
+        private static string LanguageTransform(TranslateServerEnum translateServer, LanguageEnum language)
         {
-            string s = "";
+            var s = "";
             switch (translateServer)
             {
                 case TranslateServerEnum.Bing:

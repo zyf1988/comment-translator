@@ -1,9 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
-using System.Globalization;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using CommentTranslator.Ardonment;
 using CommentTranslator.Util;
 using EnvDTE;
@@ -13,7 +10,6 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using Microsoft.VisualStudio.Threading;
 using Task = System.Threading.Tasks.Task;
 
 namespace CommentTranslator.Command
@@ -66,13 +62,7 @@ namespace CommentTranslator.Command
         /// <summary>
         /// Gets the service provider from the owner package.
         /// </summary>
-        private IAsyncServiceProvider ServiceProvider
-        {
-            get
-            {
-                return package;
-            }
-        }
+        private IAsyncServiceProvider ServiceProvider => package;
 
         /// <summary>
         /// Initializes the singleton instance of the command.

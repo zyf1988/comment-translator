@@ -33,10 +33,6 @@ namespace CommentTranslator.Ardonment
 
         #endregion
 
-        #region Properties
-
-        #endregion
-
         #region Methods
 
         public void Dispose()
@@ -94,18 +90,6 @@ namespace CommentTranslator.Ardonment
                 }
             }
         }
-
-        #endregion
-
-        #region Events
-
-        #endregion
-
-        #region EventHandlers
-
-        #endregion
-
-        #region InnerMembers
 
         #endregion
     }

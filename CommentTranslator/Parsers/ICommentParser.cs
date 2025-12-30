@@ -21,6 +21,6 @@ namespace CommentTranslator.Parsers
     {
         public int Start { get; set; }
         public int Length { get; set; }
-        public int End { get { return Start + Length; } }
+        public int End => Start + Length;
     }
 }

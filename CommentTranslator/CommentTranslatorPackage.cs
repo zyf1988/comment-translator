@@ -1,15 +1,11 @@
 ﻿using Microsoft.VisualStudio.Shell;
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading;
 using CommentTranslator.Client;
 using CommentTranslator.Command;
 using CommentTranslator.Presentation;
 using CommentTranslator.Util;
-using EnvDTE;
-using EnvDTE80;
-using Microsoft.VisualStudio.Shell.Interop;
 using Task = System.Threading.Tasks.Task;
 
 namespace CommentTranslator

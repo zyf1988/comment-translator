@@ -33,10 +33,7 @@
         /// <value>
         /// The items.
         /// </value>
-        public IEnumerable<T> Items
-        {
-            get { return rangeTree.Items.Concat(addedItemsRebuilding).Concat(addedItems); }
-        }
+        public IEnumerable<T> Items => rangeTree.Items.Concat(addedItemsRebuilding).Concat(addedItems);
 
         /// <summary>
         /// Gets the count of all items in the tree.
@@ -44,10 +41,7 @@
         /// <value>
         /// The count.
         /// </value>
-        public int Count
-        {
-            get { return rangeTree.Count + addedItemsRebuilding.Count + addedItems.Count; }
-        }
+        public int Count => rangeTree.Count + addedItemsRebuilding.Count + addedItems.Count;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RangeTreeAsync{TKey, T}"/> class.

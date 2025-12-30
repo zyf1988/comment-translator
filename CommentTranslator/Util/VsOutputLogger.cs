@@ -9,10 +9,7 @@ namespace CommentTranslator.Util
     {
         private static Lazy<Action<string>> _Logger = new Lazy<Action<string>>(() => GetWindow().OutputString);
 
-        private static Action<string> Logger
-        {
-            get { return _Logger.Value; }
-        }
+        private static Action<string> Logger => _Logger.Value;
 
         public static void SetLogger(Action<string> logger)
         {

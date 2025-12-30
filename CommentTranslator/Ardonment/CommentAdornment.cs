@@ -53,10 +53,6 @@ namespace CommentTranslator.Ardonment
 
         #endregion
 
-        #region Properties
-
-        #endregion
-
         #region Methods
 
         public void Update(CommentTag tag, SnapshotSpan span, SnapshotSpan containSpan)
@@ -307,14 +303,6 @@ namespace CommentTranslator.Ardonment
             _textBlock.Foreground = Brushes.Gray;
             _textBlock.Text = waitingText;
         }
-
-        #endregion
-
-        #region Events
-
-        #endregion
-
-        #region EventHandlers
 
         #endregion
 

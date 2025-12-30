@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Framework
+﻿namespace Framework
 {
     public class ApiResponse
     {

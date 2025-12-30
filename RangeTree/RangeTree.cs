@@ -25,10 +25,7 @@
         /// <value>
         ///   <c>true</c> if this instance is in synchronize; otherwise, <c>false</c>.
         /// </value>
-        public bool IsInSync
-        {
-            get { return isInSync; }
-        }
+        public bool IsInSync => isInSync;
 
         /// <summary>
         /// Gets all of the tree items.
@@ -36,10 +33,7 @@
         /// <value>
         /// The items.
         /// </value>
-        public IEnumerable<T> Items
-        {
-            get { return items; }
-        }
+        public IEnumerable<T> Items => items;
 
         /// <summary>
         /// Gets the count of all tree items.
@@ -47,10 +41,7 @@
         /// <value>
         /// The count.
         /// </value>
-        public int Count
-        {
-            get { return items.Count; }
-        }
+        public int Count => items.Count;
 
         /// <summary>
         /// Gets or sets a value indicating whether rebuild automatically. Defaults to true.
@@ -60,8 +51,8 @@
         /// </value>
         public bool AutoRebuild
         {
-            get { return autoRebuild; }
-            set { autoRebuild = value; }
+            get => autoRebuild;
+            set => autoRebuild = value;
         }
 
         /// <summary>

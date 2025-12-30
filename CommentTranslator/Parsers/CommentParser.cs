@@ -13,14 +13,6 @@ namespace CommentTranslator.Parsers
 
         #endregion
 
-        #region Contructors
-
-        #endregion
-
-        #region Properties
-
-        #endregion
-
         #region Methods
 
         public virtual Comment GetComment(string commentText)

@@ -40,10 +40,6 @@ namespace CommentTranslator.Ardonment
 
         #endregion
 
-        #region Properties
-
-        #endregion
-
         #region Methods
 
         public IEnumerable<ITagSpan<CommentTag>> GetTags(NormalizedSnapshotSpanCollection spans)
@@ -203,8 +199,8 @@ namespace CommentTranslator.Ardonment
         private class RangeItem : IRangeProvider<int>
         {
             public Range<int> Range { get; private set; }
-            public int Start { get { return Range.From; } }
-            public int End { get { return Range.To; } }
+            public int Start => Range.From;
+            public int End => Range.To;
 
             public RangeItem(int start, int end)
             {

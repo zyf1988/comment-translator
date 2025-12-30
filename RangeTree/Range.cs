@@ -106,7 +106,7 @@ namespace RangeTree
         /// </returns>
         public override bool Equals(object obj)
         {
-            Range<T> range = obj as Range<T>;
+            var range = obj as Range<T>;
             if (range == null)
             {
                 return false;
@@ -134,7 +134,7 @@ namespace RangeTree
         /// </returns>
         public override int GetHashCode()
         {
-            int hash = 23;
+            var hash = 23;
             hash = (hash * 37) + From.GetHashCode();
             hash = (hash * 37) + To.GetHashCode();
             return hash;

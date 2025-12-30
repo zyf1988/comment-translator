@@ -32,7 +32,7 @@ namespace CommentTranslator.Util
                     var snapshotSpan = nssc[0];
 
                     string text = snapshotSpan.GetText();
-                    if (String.IsNullOrWhiteSpace(text))
+                    if (string.IsNullOrWhiteSpace(text))
                         continue;
 
                     yield return new TagSpan<IClassificationTag>(snapshotSpan, tagSpan.Tag);

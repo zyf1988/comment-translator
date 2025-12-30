@@ -47,7 +47,7 @@ namespace Framework
             dic.Add("keyfrom", "fanyi.web");
             var data = new FormUrlEncodedContent(dic);
 
-            string ua = " Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0";
+            var ua = " Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:89.0) Gecko/20100101 Firefox/89.0";
             var request = new HttpRequestMessage(HttpMethod.Post, new Uri("https://dict.youdao.com/webtranslate"));
 
             request.Content = data;
@@ -55,12 +55,12 @@ namespace Framework
             request.Headers.Add("User-Agent", ua);
             request.Headers.Add("Referer", "http://fanyi.youdao.com/");
             request.Headers.Add("Cookie", "OUTFOX_SEARCH_USER_ID=-2094880112@10.108.162.135; OUTFOX_SEARCH_USER_ID_NCOO=86107500.53660281");
-            HttpResponseMessage response = await _httpClient.SendAsync(request);
-            string r = "";
+            var response = await _httpClient.SendAsync(request);
+            var r = "";
             if (response.IsSuccessStatusCode)
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
-                string html = Encoding.UTF8.GetString(bytes);
+                var html = Encoding.UTF8.GetString(bytes);
                 html = DecryptedText(html);
                 var jo = JObject.Parse(html);
                 var jr = JArray.Parse(jo["translateResult"].ToString());
@@ -82,25 +82,25 @@ namespace Framework
 
         private string DecryptedText(string text)
         {
-            string o = "ydsecret://query/key/B*RGygVywfNBwpmBaZg*WT7SIOUP2T0C9WHMZN39j^DAdaZhAnxvGcCY6VYFwnHl";
-            string n = "ydsecret://query/iv/C@lZe2YzHtZ2CYgaXKSVfsb7Y4QWHjITPPZ0nQp87fBeJ!Iv6v^6fvi2WN@bYpJ4";
+            var o = "ydsecret://query/key/B*RGygVywfNBwpmBaZg*WT7SIOUP2T0C9WHMZN39j^DAdaZhAnxvGcCY6VYFwnHl";
+            var n = "ydsecret://query/iv/C@lZe2YzHtZ2CYgaXKSVfsb7Y4QWHjITPPZ0nQp87fBeJ!Iv6v^6fvi2WN@bYpJ4";
             var a = MD5.Create().ComputeHash(Encoding.GetEncoding("utf-8").GetBytes(o));
             var r = MD5.Create().ComputeHash(Encoding.GetEncoding("utf-8").GetBytes(n));
 
             text = text.Replace("-", "+").Replace("_", "/");
 
-            Aes aes = Aes.Create();
+            var aes = Aes.Create();
             aes.KeySize = 128;
             aes.Mode = CipherMode.CBC;
             aes.Padding = PaddingMode.PKCS7;
             aes.Key = a;
             aes.IV = r;
 
-            ICryptoTransform decryptor = aes.CreateDecryptor();
-            byte[] encryptedBytes = Convert.FromBase64String(text);
-            byte[] decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
+            var decryptor = aes.CreateDecryptor();
+            var encryptedBytes = Convert.FromBase64String(text);
+            var decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);
 
-            string decryptedText = Encoding.UTF8.GetString(decryptedBytes);
+            var decryptedText = Encoding.UTF8.GetString(decryptedBytes);
             return decryptedText;
         }
 
@@ -108,9 +108,9 @@ namespace Framework
         /// 获取时间戳
         /// </summary>
         /// <returns></returns>
-        private string GetTimeStamp()
+        private static string GetTimeStamp()
         {
-            TimeSpan ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
+            var ts = DateTime.UtcNow - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             return Convert.ToInt64(ts.TotalMilliseconds).ToString();
         }
     }

@@ -11,19 +11,19 @@ namespace Framework
         public async Task<ApiResponse> Fanyi(string body, string from, string to, LanguageEnum fromLanguage, LanguageEnum toLanguage)
         {
             var client = new HttpClient();
-            string r = "";
-            string url = "https://translate.google.com/_/TranslateWebserverUi/data/batchexecute";
+            var r = "";
+            var url = "https://translate.google.com/_/TranslateWebserverUi/data/batchexecute";
             var request = new HttpRequestMessage(HttpMethod.Post, new Uri(url));
             IDictionary<string, string> dic = new Dictionary<string, string>();
             dic.Add("f.req", $"[[[\"MkEWBc\",\"[[\\\"{body}\\\",\\\"{from}\\\",\\\"{to}\\\",true],[null]]\", null, \"generic\"]]]");
             var data = new FormUrlEncodedContent(dic);
             request.Content = data;
-            HttpResponseMessage response = await client.SendAsync(request);
+            var response = await client.SendAsync(request);
 
             if (response.IsSuccessStatusCode)
             {
                 var bytes = await response.Content.ReadAsByteArrayAsync();
-                string html = Encoding.UTF8.GetString(bytes);
+                var html = Encoding.UTF8.GetString(bytes);
                 html = html.Replace("\\n", "").Replace(")]}'", "");
                 var jo = Newtonsoft.Json.Linq.JArray.Parse(html);
                 jo = Newtonsoft.Json.Linq.JArray.Parse(jo[0][2].ToString());
