@@ -32,7 +32,9 @@ namespace CommentTranslator.Support
         public RegexTagger(ITextBuffer buffer, IEnumerable<Regex> matchExpressions)
         {
             if (matchExpressions.Any(re => (re.Options & RegexOptions.Multiline) == RegexOptions.Multiline))
+            {
                 throw new ArgumentException("Multiline regular expressions are not supported.");
+            }
 
             this.matchExpressions = matchExpressions;
 
@@ -44,7 +46,10 @@ namespace CommentTranslator.Support
 
         public virtual IEnumerable<ITagSpan<T>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            if (!CommentTranslatorPackage.Settings.AutoTranslateComment) yield break;
+            if (!CommentTranslatorPackage.Settings.AutoTranslateComment)
+            {
+                yield break;
+            }
 
             // Here we grab whole lines so that matches that only partially fall inside the spans argument are detected.
             // Note that the spans argument can contain spans that are sub-spans of lines or intersect multiple lines.
@@ -73,7 +78,10 @@ namespace CommentTranslator.Support
         IEnumerable<ITextSnapshotLine> GetIntersectingLines(NormalizedSnapshotSpanCollection spans)
         {
             if (spans.Count == 0)
+            {
                 yield break;
+            }
+
             int lastVisitedLineNumber = -1;
             ITextSnapshot snapshot = spans[0].Snapshot;
             foreach (var span in spans)
@@ -106,11 +114,15 @@ namespace CommentTranslator.Support
         protected virtual void HandleBufferChanged(TextContentChangedEventArgs args)
         {
             if (args.Changes.Count == 0)
+            {
                 return;
+            }
 
             var temp = TagsChanged;
             if (temp == null)
+            {
                 return;
+            }
 
             // Combine all changes into a single span so that
             // the ITagger<>.TagsChanged event can be raised just once for a compound edit

@@ -52,7 +52,9 @@ namespace CommentTranslator.Ardonment
         protected override IEnumerable<Tuple<SnapshotSpan, PositionAffinity?, CommentTag, SnapshotSpan>> GetAdornmentData(NormalizedSnapshotSpanCollection spans)
         {
             if (spans.Count == 0)
+            {
                 yield break;
+            }
 
             var snapshot = spans[0].Snapshot;
             var mappingCommentTagSpans = _commentTagger.GetTags(spans);
@@ -73,7 +75,10 @@ namespace CommentTranslator.Ardonment
 
         private IEnumerable<ITagSpan<T>> ConvertToTagSpan<T>(ITextSnapshot snapshot, IEnumerable<IMappingTagSpan<T>> mappingTagSpans) where T : ITag
         {
-            if (mappingTagSpans.Count() == 0) yield break;
+            if (mappingTagSpans.Count() == 0)
+            {
+                yield break;
+            }
 
             foreach (var mapTagSpan in mappingTagSpans)
             {
@@ -84,7 +89,9 @@ namespace CommentTranslator.Ardonment
 
                     //string text = snapshotSpan.is.GetText();
                     if (snapshotSpan.IsEmpty)
+                    {
                         continue;
+                    }
 
                     yield return new TagSpan<T>(snapshotSpan, mapTagSpan.Tag);
                 }

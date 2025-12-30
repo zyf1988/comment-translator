@@ -77,7 +77,10 @@ namespace CommentTranslator.Ardonment
         /// <returns></returns>
         public bool HandleMouseLeftButton(MouseButtonEventArgs e)
         {
-            if (_popup == null) return false;
+            if (_popup == null)
+            {
+                return false;
+            }
 
             if (e.Source is TranslatePopup translatePopup)
             {
@@ -94,7 +97,10 @@ namespace CommentTranslator.Ardonment
         /// <returns></returns>
         public bool HandleMouseRightButton(MouseButtonEventArgs e)
         {
-            if (_popup == null) return false;
+            if (_popup == null)
+            {
+                return false;
+            }
 
             if (e.Source is TranslatePopup translatePopup)
             {

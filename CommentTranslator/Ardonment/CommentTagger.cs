@@ -45,7 +45,9 @@ namespace CommentTranslator.Ardonment
         public IEnumerable<ITagSpan<CommentTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             if (!CommentTranslatorPackage.Settings.AutoTranslateComment || spans.Count == 0 || _parser == null)
+            {
                 yield break;
+            }
 
             var currentRegions = _regions;
             var currentSnapshot = _snapshot;
@@ -85,7 +87,10 @@ namespace CommentTranslator.Ardonment
         private void ReParse(INormalizedTextChangeCollection changes)
         {
             //Check is enable auto translate
-            if (!CommentTranslatorPackage.Settings.AutoTranslateComment) return;
+            if (!CommentTranslatorPackage.Settings.AutoTranslateComment)
+            {
+                return;
+            }
 
             //Find last comment end
             var newRegions = new List<CommentRegion>();
@@ -94,7 +99,10 @@ namespace CommentTranslator.Ardonment
             if (changes != null)
             {
                 //Not run if no change
-                if (changes.Count == 0) return;
+                if (changes.Count == 0)
+                {
+                    return;
+                }
 
                 //Find start of change line
                 foreach (var region in _regions)
@@ -113,7 +121,10 @@ namespace CommentTranslator.Ardonment
 
             //Find new region
             var regions = _parser.GetCommentRegions(newSnapshot, startFrom);
-            if (regions.Count() > 0) newRegions.AddRange(regions);
+            if (regions.Count() > 0)
+            {
+                newRegions.AddRange(regions);
+            }
 
             //determine the changed span, and send a changed event with the new spans
             List<Span> oldSpans = new List<Span>(_regions.Select(r => AsSnapshotSpan(r, _snapshot)
@@ -173,7 +184,10 @@ namespace CommentTranslator.Ardonment
         {
             // If this isn't the most up-to-date version of the buffer, then ignore it for now (we'll eventually get another change event).
             if (e.After != _buffer.CurrentSnapshot)
+            {
                 return;
+            }
+
             ReParse(e.Changes);
         }
 

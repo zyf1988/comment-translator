@@ -25,7 +25,9 @@ namespace CommentTranslator.Ardonment
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             if (buffer == null)
+            {
                 throw new ArgumentNullException("buffer");
+            }
 
             return buffer.Properties.GetOrCreateSingletonProperty(() => new CommentTagger(buffer, BufferTagAggregatorFactoryService.CreateTagAggregator<IClassificationTag>(buffer))) as ITagger<T>;
         }

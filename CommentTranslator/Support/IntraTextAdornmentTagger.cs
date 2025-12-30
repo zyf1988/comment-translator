@@ -84,7 +84,9 @@ namespace CommentTranslator.Support
                 _invalidatedSpans.AddRange(spans);
 
                 if (wasEmpty && _invalidatedSpans.Count > 0)
+                {
                     _view.VisualElement.Dispatcher.BeginInvoke(new Action(AsyncUpdate));
+                }
             }
         }
 
@@ -118,7 +120,9 @@ namespace CommentTranslator.Support
             }
 
             if (translatedSpans.Count == 0)
+            {
                 return;
+            }
 
             var start = translatedSpans.Select(span => span.Start).Min();
             var end = translatedSpans.Select(span => span.End).Max();
@@ -146,7 +150,9 @@ namespace CommentTranslator.Support
                 select keyValuePair.Key);
 
             foreach (var span in toRemove)
+            {
                 _adornmentCache.Remove(span);
+            }
         }
 
 
@@ -154,7 +160,9 @@ namespace CommentTranslator.Support
         public virtual IEnumerable<ITagSpan<IntraTextAdornmentTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             if (!CommentTranslatorPackage.Settings.AutoTranslateComment || spans == null || spans.Count == 0)
+            {
                 yield break;
+            }
 
             // Translate the request to the snapshot that this tagger is current with.
 
@@ -177,12 +185,16 @@ namespace CommentTranslator.Support
         private IEnumerable<TagSpan<IntraTextAdornmentTag>> GetAdornmentTagsOnSnapshot(NormalizedSnapshotSpanCollection spans)
         {
             if (spans.Count == 0)
+            {
                 yield break;
+            }
 
             ITextSnapshot snapshot = spans[0].Snapshot;
 
             if (snapshot != _snapshot)
+            {
                 yield break;
+            }
 
             // Since WPF UI objects have state (like mouse hover or animation) and are relatively expensive to create and lay out,
             // this code tries to reuse controls as much as possible.
@@ -192,8 +204,12 @@ namespace CommentTranslator.Support
             // so that they can be removed from the cache if they no longer correspond to data tags.
             HashSet<SnapshotSpan> toRemove = new HashSet<SnapshotSpan>();
             foreach (var ar in _adornmentCache)
+            {
                 if (spans.IntersectsWith(new NormalizedSnapshotSpanCollection(ar.Key)))
+                {
                     toRemove.Add(ar.Key);
+                }
+            }
 
             foreach (var spanDataPair in GetAdornmentData(spans).Distinct(new Comparer()))
             {
@@ -206,14 +222,18 @@ namespace CommentTranslator.Support
                 if (_adornmentCache.TryGetValue(snapshotSpan, out adornment))
                 {
                     if (UpdateAdornment(adornment, adornmentData, snapshotSpan, containSpan))
+                    {
                         toRemove.Remove(snapshotSpan);
+                    }
                 }
                 else
                 {
                     adornment = CreateAdornment(adornmentData, snapshotSpan, containSpan);
 
                     if (adornment == null)
+                    {
                         continue;
+                    }
 
                     // Get the adornment to measure itself. Its DesiredSize property is used to determine
                     // how much space to leave between text for this adornment.
@@ -232,7 +252,9 @@ namespace CommentTranslator.Support
             }
 
             foreach (var snapshotSpan in toRemove)
+            {
                 _adornmentCache.Remove(snapshotSpan);
+            }
         }
 
         public event EventHandler<SnapshotSpanEventArgs> TagsChanged;
@@ -242,9 +264,15 @@ namespace CommentTranslator.Support
             public bool Equals(Tuple<SnapshotSpan, PositionAffinity?, TData, SnapshotSpan> x, Tuple<SnapshotSpan, PositionAffinity?, TData, SnapshotSpan> y)
             {
                 if (x == null && y == null)
+                {
                     return true;
+                }
+
                 if (x == null || y == null)
+                {
                     return false;
+                }
+
                 return x.Item1.Equals(y.Item1);
             }
 

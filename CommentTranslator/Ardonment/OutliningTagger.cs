@@ -28,7 +28,10 @@ namespace CommentTranslator.Ardonment
         public IEnumerable<ITagSpan<IOutliningRegionTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
             if (spans.Count == 0)
+            {
                 yield break;
+            }
+
             List<Region> currentRegions = regions;
             ITextSnapshot currentSnapshot = snapshot;
             SnapshotSpan entire = new SnapshotSpan(spans[0].Start, spans[spans.Count - 1].End).TranslateTo(currentSnapshot, SpanTrackingMode.EdgeExclusive);
@@ -57,7 +60,10 @@ namespace CommentTranslator.Ardonment
         {
             // If this isn't the most up-to-date version of the buffer, then ignore it for now (we'll eventually get another change event).
             if (e.After != buffer.CurrentSnapshot)
+            {
                 return;
+            }
+
             ReParse();
         }
 
@@ -81,7 +87,9 @@ namespace CommentTranslator.Ardonment
                     int currentLevel = (currentRegion != null) ? currentRegion.Level : 1;
                     int newLevel;
                     if (!TryGetLevel(text, regionStart, out newLevel))
+                    {
                         newLevel = currentLevel + 1;
+                    }
 
                     //levels are the same and we have an existing region;
                     //end the current region and start the next
@@ -121,7 +129,9 @@ namespace CommentTranslator.Ardonment
                     int currentLevel = (currentRegion != null) ? currentRegion.Level : 1;
                     int closingLevel;
                     if (!TryGetLevel(text, regionStart, out closingLevel))
+                    {
                         closingLevel = currentLevel;
+                    }
 
                     //the regions match
                     if (currentRegion != null &&
@@ -177,8 +187,10 @@ namespace CommentTranslator.Ardonment
             {
                 ITextSnapshot snap = snapshot;
                 if (TagsChanged != null)
+                {
                     TagsChanged(this, new SnapshotSpanEventArgs(
                         new SnapshotSpan(snapshot, Span.FromBounds(changeStart, changeEnd))));
+                }
             }
         }
 
@@ -188,7 +200,9 @@ namespace CommentTranslator.Ardonment
             if (text.Length > startIndex + 3)
             {
                 if (int.TryParse(text.Substring(startIndex + 1), out level))
+                {
                     return true;
+                }
             }
 
             return false;

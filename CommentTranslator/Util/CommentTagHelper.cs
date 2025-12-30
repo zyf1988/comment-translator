@@ -14,17 +14,23 @@ namespace CommentTranslator.Util
             var snapshot = spans[0].Snapshot;
             var contentType = snapshot.TextBuffer.ContentType;
             if (!(contentType.IsOfType("code") || contentType.IsOfType("projection")))
+            {
                 yield break;
+            }
 
             if (CommentParserHelper.GetCommentParser(contentType.TypeName) == null)
+            {
                 yield break;
+            }
 
             foreach (var tagSpan in aggregator.GetTags(spans))
             {
                 // find spans that the language service has already classified as comments ...
                 string classificationName = tagSpan.Tag.ClassificationType.Classification;
                 if (types.All(t => classificationName.IndexOf(t, StringComparison.OrdinalIgnoreCase) < 0))
+                {
                     continue;
+                }
 
                 var nssc = tagSpan.Span.GetSpans(snapshot);
                 if (nssc.Count > 0)
@@ -33,7 +39,9 @@ namespace CommentTranslator.Util
 
                     string text = snapshotSpan.GetText();
                     if (string.IsNullOrWhiteSpace(text))
+                    {
                         continue;
+                    }
 
                     yield return new TagSpan<IClassificationTag>(snapshotSpan, tagSpan.Tag);
                 };

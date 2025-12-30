@@ -45,9 +45,15 @@ namespace CommentTranslator.Presentation
         {
             var maxHeight = viewportSize.Height / 2.0d;
             if (maxHeight > 600)
+            {
                 maxHeight = 600;
+            }
+
             if (maxHeight < 150)
+            {
                 maxHeight = 150;
+            }
+
             bdTranslatedText.MaxHeight = maxHeight;
             bdError.MaxHeight = maxHeight;
         }

@@ -113,7 +113,10 @@ namespace CommentTranslator.Parsers
                     var indexTags = GetIndexTags(text, tags);
 
                     //Stop if not found tag
-                    if (indexTags == null) break;
+                    if (indexTags == null)
+                    {
+                        break;
+                    }
 
                     //Try for each tag
                     var foundTag = false;
@@ -150,7 +153,10 @@ namespace CommentTranslator.Parsers
                         }
                     }
 
-                    if (!foundTag) break;
+                    if (!foundTag)
+                    {
+                        break;
+                    }
                 }
             }
 
